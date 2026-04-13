@@ -1,10 +1,23 @@
 import React from "react";
-import Navbar  from "../components/Navbar";
-import  Footer  from "../components/Footer";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 const Checkout = () => {
   const state = useSelector((state) => state.handleCart);
+  const navigate = useNavigate();
+
+  const handleCheckout = (e) => {
+    e.preventDefault();
+
+    toast.success("Order placed successfully ✅");
+
+    setTimeout(() => {
+      navigate("/"); // redirect to home
+    }, 1500);
+  };
 
   const EmptyCart = () => {
     return (
@@ -25,13 +38,12 @@ const Checkout = () => {
     let subtotal = 0;
     let shipping = 30.0;
     let totalItems = 0;
-    state.map((item) => {
-      return (subtotal += item.price * item.qty);
+
+    state.forEach((item) => {
+      subtotal += item.price * item.qty;
+      totalItems += item.qty;
     });
 
-    state.map((item) => {
-      return (totalItems += item.qty);
-    });
     return (
       <>
         <div className="container py-5">
@@ -43,153 +55,71 @@ const Checkout = () => {
                 </div>
                 <div className="card-body">
                   <ul className="list-group list-group-flush">
-                    <li className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                      Products ({totalItems})<span>${Math.round(subtotal)}</span>
+                    <li className="list-group-item d-flex justify-content-between">
+                      Products ({totalItems})
+                      <span>${Math.round(subtotal)}</span>
                     </li>
-                    <li className="list-group-item d-flex justify-content-between align-items-center px-0">
-                      Shipping
-                      <span>${shipping}</span>
+                    <li className="list-group-item d-flex justify-content-between">
+                      Shipping <span>${shipping}</span>
                     </li>
-                    <li className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                      <div>
-                        <strong>Total amount</strong>
-                      </div>
-                      <span>
-                        <strong>${Math.round(subtotal + shipping)}</strong>
-                      </span>
+                    <li className="list-group-item d-flex justify-content-between">
+                      <strong>Total</strong>
+                      <strong>${Math.round(subtotal + shipping)}</strong>
                     </li>
                   </ul>
                 </div>
               </div>
             </div>
+
             <div className="col-md-7 col-lg-8">
               <div className="card mb-4">
                 <div className="card-header py-3">
                   <h4 className="mb-0">Billing address</h4>
                 </div>
+
                 <div className="card-body">
-                  <form className="needs-validation" novalidate>
+                  <form onSubmit={handleCheckout}>
                     <div className="row g-3">
+
                       <div className="col-sm-6 my-1">
-                        <label for="firstName" className="form-label">
-                          First name
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="firstName"
-                          placeholder=""
-                          required
-                        />
-                        <div className="invalid-feedback">
-                          Valid first name is required.
-                        </div>
+                        <label htmlFor="firstName">First name</label>
+                        <input type="text" className="form-control" required />
                       </div>
 
                       <div className="col-sm-6 my-1">
-                        <label for="lastName" className="form-label">
-                          Last name
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="lastName"
-                          placeholder=""
-                          required
-                        />
-                        <div className="invalid-feedback">
-                          Valid last name is required.
-                        </div>
+                        <label htmlFor="lastName">Last name</label>
+                        <input type="text" className="form-control" required />
                       </div>
 
                       <div className="col-12 my-1">
-                        <label for="email" className="form-label">
-                          Email
-                        </label>
-                        <input
-                          type="email"
-                          className="form-control"
-                          id="email"
-                          placeholder="you@example.com"
-                          required
-                        />
-                        <div className="invalid-feedback">
-                          Please enter a valid email address for shipping
-                          updates.
-                        </div>
+                        <label htmlFor="email">Email</label>
+                        <input type="email" className="form-control" required />
                       </div>
 
                       <div className="col-12 my-1">
-                        <label for="address" className="form-label">
-                          Address
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="address"
-                          placeholder="1234 Main St"
-                          required
-                        />
-                        <div className="invalid-feedback">
-                          Please enter your shipping address.
-                        </div>
-                      </div>
-
-                      <div className="col-12">
-                        <label for="address2" className="form-label">
-                          Address 2{" "}
-                          <span className="text-muted">(Optional)</span>
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="address2"
-                          placeholder="Apartment or suite"
-                        />
+                        <label htmlFor="address">Address</label>
+                        <input type="text" className="form-control" required />
                       </div>
 
                       <div className="col-md-5 my-1">
-                        <label for="country" className="form-label">
-                          Country
-                        </label>
-                        <br />
-                        <select className="form-select" id="country" required>
+                        <label htmlFor="country">Country</label>
+                        <select className="form-select" required>
                           <option value="">Choose...</option>
                           <option>India</option>
                         </select>
-                        <div className="invalid-feedback">
-                          Please select a valid country.
-                        </div>
                       </div>
 
                       <div className="col-md-4 my-1">
-                        <label for="state" className="form-label">
-                          State
-                        </label>
-                        <br />
-                        <select className="form-select" id="state" required>
+                        <label htmlFor="state">State</label>
+                        <select className="form-select" required>
                           <option value="">Choose...</option>
-                          <option>Punjab</option>
+                          <option>Andhra Pradesh</option>
                         </select>
-                        <div className="invalid-feedback">
-                          Please provide a valid state.
-                        </div>
                       </div>
 
                       <div className="col-md-3 my-1">
-                        <label for="zip" className="form-label">
-                          Zip
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="zip"
-                          placeholder=""
-                          required
-                        />
-                        <div className="invalid-feedback">
-                          Zip code required.
-                        </div>
+                        <label htmlFor="zip">Zip</label>
+                        <input type="text" className="form-control" required />
                       </div>
                     </div>
 
@@ -199,90 +129,46 @@ const Checkout = () => {
 
                     <div className="row gy-3">
                       <div className="col-md-6">
-                        <label for="cc-name" className="form-label">
-                          Name on card
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="cc-name"
-                          placeholder=""
-                          required
-                        />
-                        <small className="text-muted">
-                          Full name as displayed on card
-                        </small>
-                        <div className="invalid-feedback">
-                          Name on card is required
-                        </div>
+                        <label htmlFor="cc-name">Name on card</label>
+                        <input type="text" className="form-control" required />
                       </div>
 
                       <div className="col-md-6">
-                        <label for="cc-number" className="form-label">
-                          Credit card number
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="cc-number"
-                          placeholder=""
-                          required
-                        />
-                        <div className="invalid-feedback">
-                          Credit card number is required
-                        </div>
+                        <label htmlFor="cc-number">Card number</label>
+                        <input type="text" className="form-control" required />
                       </div>
 
                       <div className="col-md-3">
-                        <label for="cc-expiration" className="form-label">
-                          Expiration
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="cc-expiration"
-                          placeholder=""
-                          required
-                        />
-                        <div className="invalid-feedback">
-                          Expiration date required
-                        </div>
+                        <label htmlFor="cc-expiration">Expiration</label>
+                        <input type="text" className="form-control" required />
                       </div>
 
                       <div className="col-md-3">
-                        <label for="cc-cvv" className="form-label">
-                          CVV
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="cc-cvv"
-                          placeholder=""
-                          required
-                        />
-                        <div className="invalid-feedback">
-                          Security code required
-                        </div>
+                        <label htmlFor="cc-cvv">CVV</label>
+                        <input type="text" className="form-control" required />
                       </div>
                     </div>
 
                     <hr className="my-4" />
 
                     <button
-                      className="w-100 btn btn-primary "
-                      type="submit" disabled
+                      className="w-100 btn btn-primary"
+                      type="submit"
                     >
-                      Continue to checkout
+                      Place Order
                     </button>
+
                   </form>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </>
     );
   };
+
   return (
     <>
       <Navbar />

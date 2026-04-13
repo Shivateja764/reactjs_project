@@ -42,6 +42,7 @@ root.render(
         </Routes>
       </Provider>
     </ScrollToTop>
+    <Toaster position="top-center" /> 
     <Toaster />
   </BrowserRouter>
 );
